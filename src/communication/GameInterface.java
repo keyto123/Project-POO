@@ -36,4 +36,9 @@ public interface GameInterface {
 	 * @return ProjectGameStats - stats of the game
 	 */
 	public ProjectGameStats getStats();
+	
+	/**
+	 * Get the name that will be displayed at master interface
+	 */
+	public String getGameName();
 }
