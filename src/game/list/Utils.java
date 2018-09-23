@@ -42,8 +42,6 @@ public class Utils {
 		String path = tmp2.getPath() + "games";
 
 		File gamesDir = new File(path);
-		
-		System.out.println("path = " + path);
 
 		boolean created = gamesDir.mkdir();
 		if (!created && (!gamesDir.exists() || !gamesDir.isDirectory())) {
