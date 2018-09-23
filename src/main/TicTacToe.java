@@ -265,4 +265,7 @@ public class TicTacToe extends ProjectGame {
 
 		restartButton.addActionListener(restartListener);
 	}
+
+	@Override
+	public String getGameName() { return "Tic Tac Toe"; }
 }
