@@ -7,7 +7,7 @@ import javax.swing.JPanel;
  * Usage is really simple, just extends it.
  * If necessary, setGameStats with a pre configured, otherwise
  * just stick with plain created stats
- * @author lucas
+ * @author Lucas Mateus
  *
  */
 public abstract class ProjectGame extends JPanel implements GameInterface {
