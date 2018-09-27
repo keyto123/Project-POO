@@ -24,21 +24,131 @@ import communication.ProjectGame;
  */
 public class Utils {
 
+	private static String gameFolderPath;
+	private static ArrayList<GameInterface> gameList;
+
+	/**
+	 * @return - ArrayList of GameInterface
+	 */
+	public static ArrayList<GameInterface> getGameList() {
+		return gameList;
+	}
+
+	/**
+	 * Check if between a dir and a file
+	 * 
+	 * @param f      - file selected by user
+	 * @param insert - true if should insert file into games folder, false otherwise
+	 * @return false if not a dir and not a file, true otherwise
+	 */
+	public static boolean updateGameList(File f, boolean insert) {
+		if (f.isDirectory()) {
+			return updateGameListFromDir(f, insert);
+		} else if (f.isFile()) {
+			return updateGameListFromFile(f, insert);
+		} else {
+			return false;
+		}
+	}
+	
+	/**
+	 * Get the list of files at dir and call updateGameListFromFile for each jar file
+	 * @param file - directory
+	 * @param insert - true if should insert file at games folder
+	 * @return true if everything went fine, false otherwise
+	 */
+	private static boolean updateGameListFromDir(File file, boolean insert) {
+		File files[] = file.listFiles();
+
+		boolean error = false;
+
+		for (File f : files) {
+			if (f.getAbsolutePath().endsWith(".jar")) {
+				error = error || !updateGameListFromFile(f, insert);
+			}
+		}
+
+		return error;
+	}
+
+	/**
+	 * Add a game to games list
+	 * @param jf - JarFile with the game
+	 * @return true if could add the game, false if Jar is not of a game
+	 */
+	private static boolean addGame(JarFile jf) {
+		GameInterface result = getGameInterface(jf);
+		if (result != null) {
+			gameList.add(getGameInterface(jf));
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	/**
+	 * Get the jarfile and add the game if it's a game
+	 * @param file - file
+	 * @param insert - true if should insert file at games folder
+	 * @return
+	 */
+	private static boolean updateGameListFromFile(File file, boolean insert) {
+		JarFile jar = null;
+		try {
+			jar = jarFromFile(file);
+		} catch (IOException e) {
+			return false;
+		}
+
+		if (jar == null) {
+			return false;
+		}
+
+		if (addGame(jar) && insert) {
+			insertFileAtGamesFolder(file);
+		}
+
+		return true;
+	}
+
+	private static void insertFileAtGamesFolder(File file) {
+		String path = null;
+
+		try {
+			path = new URI(gameFolderPath + file.getName()).getPath();
+		} catch (URISyntaxException e) {
+			System.out.println("URI syntax error: " + e.getMessage());
+			return;
+		}
+
+		if (file.renameTo(new File(path))) {
+			file.delete();
+		} else {
+			System.out.println("Failed to move file");
+		}
+	}
+
+	/**
+	 * Must be called to initialize everything before using using them
+	 * 
+	 * @throws URISyntaxException - when trying to convert gameFolderPath to URI
+	 */
+	public static void initAll() throws URISyntaxException, IOException {
+
+		initGameFolderPath();
+		initGameList();
+	}
+
 	/**
 	 * Get the folder where the games should be stored at
 	 * 
 	 * @return String - games folder path
 	 */
-	private static String getGameFolderPath() {
-		
+	private static void initGameFolderPath() throws URISyntaxException {
+
 		URL tmp = Utils.class.getResource("/");
-		URI tmp2 = null;
-		try {
-			tmp2 = tmp.toURI();
-		} catch (URISyntaxException e) {
-			e.printStackTrace();
-			System.exit(1);
-		}
+		URI tmp2 = tmp.toURI();
+
 		String path = tmp2.getPath() + "games";
 
 		File gamesDir = new File(path);
@@ -47,10 +157,23 @@ public class Utils {
 		if (!created && (!gamesDir.exists() || !gamesDir.isDirectory())) {
 			JOptionPane.showMessageDialog(null,
 					"Failed to find/create games dir. Check if you have permission to create directory in the emulation folder");
-			System.exit(1);
 		}
 
-		return path;
+		gameFolderPath = path;
+	}
+
+	/**
+	 * Get a JarFile from a File
+	 * @param f - File to convert
+	 * @return JarFile after converting or null if failed
+	 * @throws IOException
+	 */
+	private static JarFile jarFromFile(File f) throws IOException {
+		String aux = f.getAbsolutePath();
+		if (aux.endsWith(".jar")) {
+			return new JarFile(f);
+		}
+		return null;
 	}
 
 	/**
@@ -58,25 +181,18 @@ public class Utils {
 	 * 
 	 * @return ArrayList\ltJarFile\gt - Every jars found in the game folder path
 	 */
-	private static ArrayList<JarFile> getJars() {
-		String gameFolderPath = Utils.getGameFolderPath();
-
-		File fs[] = new File(gameFolderPath).listFiles();
+	private static ArrayList<JarFile> getJars(String path) throws IOException {
+		File fs[] = new File(path).listFiles();
 		ArrayList<JarFile> jars = new ArrayList<JarFile>();
-		
-		if(fs.length == 0) {
-			return jars; 
+
+		if (fs.length == 0) {
+			return jars;
 		}
 
-		for (File i : fs) {
-			String aux = i.getAbsolutePath();
-			if (aux.endsWith(".jar")) {
-				try {
-					JarFile tmpJar = new JarFile(i);
-					jars.add(tmpJar);
-				} catch (IOException e) {
-					System.out.println("Jar file opening error: " + e.getMessage());
-				}
+		for (File f : fs) {
+			JarFile tmp = jarFromFile(f);
+			if (tmp != null) {
+				jars.add(jarFromFile(f));
 			}
 		}
 
@@ -88,15 +204,13 @@ public class Utils {
 	 * 
 	 * @return ArrayList\ltGameInterface\gt - contains every game interface found
 	 */
-	public static ArrayList<GameInterface> getAllGames() {
-		ArrayList<JarFile> jars = getJars();
-		ArrayList<GameInterface> games = new ArrayList<GameInterface>();
+	private static void initGameList() throws IOException {
+		ArrayList<JarFile> jars = getJars(gameFolderPath);
+		gameList = new ArrayList<GameInterface>();
 
 		for (JarFile jf : jars) {
-			games.add(getGameInterface(jf));
+			addGame(jf);
 		}
-
-		return games;
 	}
 
 	/**
