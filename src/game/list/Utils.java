@@ -81,6 +81,13 @@ public class Utils {
 	 */
 	private static boolean addGame(JarFile jf) {
 		GameInterface result = getGameInterface(jf);
+		if(gameList != null) {
+			for(GameInterface g : gameList) {
+				if(result.getGameName().equals(g.getGameName())) {
+					return false;
+				}
+			}
+		}
 		if (result != null) {
 			gameList.add(getGameInterface(jf));
 			return true;
@@ -108,13 +115,22 @@ public class Utils {
 			return false;
 		}
 
-		if (addGame(jar) && insert) {
+		boolean gameAdded = addGame(jar);
+		if(!gameAdded) {
+			return false;
+		}
+		
+		if (gameAdded && insert) {
 			insertFileAtGamesFolder(file);
 		}
 
 		return true;
 	}
 
+	/**
+	 * Move a file to games folder using file.renameTo
+	 * @param file
+	 */
 	private static void insertFileAtGamesFolder(File file) {
 		String fileName = file.getName();
 
