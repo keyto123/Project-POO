@@ -50,10 +50,12 @@ public class Utils {
 			return false;
 		}
 	}
-	
+
 	/**
-	 * Get the list of files at dir and call updateGameListFromFile for each jar file
-	 * @param file - directory
+	 * Get the list of files at dir and call updateGameListFromFile for each jar
+	 * file
+	 * 
+	 * @param file   - directory
 	 * @param insert - true if should insert file at games folder
 	 * @return true if everything went fine, false otherwise
 	 */
@@ -73,6 +75,7 @@ public class Utils {
 
 	/**
 	 * Add a game to games list
+	 * 
 	 * @param jf - JarFile with the game
 	 * @return true if could add the game, false if Jar is not of a game
 	 */
@@ -88,7 +91,8 @@ public class Utils {
 
 	/**
 	 * Get the jarfile and add the game if it's a game
-	 * @param file - file
+	 * 
+	 * @param file   - file
 	 * @param insert - true if should insert file at games folder
 	 * @return
 	 */
@@ -113,18 +117,15 @@ public class Utils {
 
 	private static void insertFileAtGamesFolder(File file) {
 		String fileName = file.getName();
-		
+
 		try {
 			fileName = new URI(fileName).getPath();
 		} catch (URISyntaxException e) {
 			System.out.println("URI syntax error: " + e.getMessage());
 			return;
 		}
-		
-		System.out.println(File.separator);
-		System.out.println(File.pathSeparator);
+
 		String path = gameFolderPath + File.separator + fileName;
-		System.out.println("Path: " + path);
 
 		if (!file.renameTo(new File(path))) {
 			System.out.println("Failed to move file");
@@ -167,6 +168,7 @@ public class Utils {
 
 	/**
 	 * Get a JarFile from a File
+	 * 
 	 * @param f - File to convert
 	 * @return JarFile after converting or null if failed
 	 * @throws IOException
