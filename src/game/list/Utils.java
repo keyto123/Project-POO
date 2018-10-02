@@ -113,7 +113,6 @@ public class Utils {
 
 	private static void insertFileAtGamesFolder(File file) {
 		String fileName = file.getName();
-		System.out.println("fileName: " + fileName);
 		
 		try {
 			fileName = new URI(fileName).getPath();
@@ -121,8 +120,6 @@ public class Utils {
 			System.out.println("URI syntax error: " + e.getMessage());
 			return;
 		}
-		
-		System.out.println("fileName2:" + fileName);
 		
 		String path = gameFolderPath + fileName;
 
