@@ -112,14 +112,19 @@ public class Utils {
 	}
 
 	private static void insertFileAtGamesFolder(File file) {
-		String path = null;
-
+		String fileName = file.getName();
+		System.out.println("fileName: " + fileName);
+		
 		try {
-			path = new URI(gameFolderPath + file.getName()).getPath();
+			fileName = new URI(fileName).getPath();
 		} catch (URISyntaxException e) {
 			System.out.println("URI syntax error: " + e.getMessage());
 			return;
 		}
+		
+		System.out.println("fileName2:" + fileName);
+		
+		String path = gameFolderPath + fileName;
 
 		if (file.renameTo(new File(path))) {
 			file.delete();
