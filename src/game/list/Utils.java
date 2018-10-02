@@ -121,11 +121,12 @@ public class Utils {
 			return;
 		}
 		
-		String path = gameFolderPath + fileName;
+		System.out.println(File.separator);
+		System.out.println(File.pathSeparator);
+		String path = gameFolderPath + File.separator + fileName;
+		System.out.println("Path: " + path);
 
-		if (file.renameTo(new File(path))) {
-			file.delete();
-		} else {
+		if (!file.renameTo(new File(path))) {
 			System.out.println("Failed to move file");
 		}
 	}
