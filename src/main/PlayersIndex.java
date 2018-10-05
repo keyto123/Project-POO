@@ -1,7 +1,7 @@
 package main;
 
 public enum PlayersIndex {
-	NONE("","Nennhum"), PLAYER("X", "Jogador"), ADVERSARY("O", "Adversario");
+	NONE("","Nenhum"), PLAYER("X", "Jogador"), ADVERSARY("O", "Adversario");
 	
 	private String letter;
 	private String user;
