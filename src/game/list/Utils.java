@@ -89,7 +89,7 @@ public class Utils {
 			}
 		}
 		if (result != null) {
-			gameList.add(getGameInterface(jf));
+			gameList.add(result);
 			return true;
 		} else {
 			return false;
