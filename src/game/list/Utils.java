@@ -50,6 +50,22 @@ public class Utils {
 			return false;
 		}
 	}
+	
+	public static ProjectGame getGameInstance(int index) {
+		try {
+			return (ProjectGame)gameList.get(index).getClass().newInstance();
+		} catch (InstantiationException | IllegalAccessException e) {
+			return null;
+		}
+	}
+	
+	public static ProjectGame getGameInstance(GameInterface g) {
+		try {
+			return (ProjectGame) g.getClass().newInstance();
+		} catch (InstantiationException | IllegalAccessException e) {
+			return null;
+		}
+	}
 
 	/**
 	 * Get the list of files at dir and call updateGameListFromFile for each jar
