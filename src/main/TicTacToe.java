@@ -27,7 +27,7 @@ public class TicTacToe extends ProjectGame {
 
 	private GameButton gameButtons[][];
 	private JButton restartButton;
-	
+
 	private int remainingPlays;
 
 	public TicTacToe() {}
@@ -49,21 +49,20 @@ public class TicTacToe extends ProjectGame {
 
 		currentPlayer = PlayersIndex.PLAYER;
 		winner = PlayersIndex.NONE;
-		
+
 		this.player = new JLabel(currentPlayer.toString());
 		this.status = new JLabel("Jogador " + stats.getWins() + " : " + stats.getLoses() + " Adversario");
 		this.winLabel = new JLabel(winner.toString());
-		
+
 		infoPanel = new JPanel(new GridLayout());
 		infoPanel.add(player);
 		infoPanel.add(status);
 
 		restartButton = new JButton("Restart");
 		gameButtons = new GameButton[3][3];
-		
+
 		this.initButtons();
-		
-		
+
 		bottomPanel = new JPanel();
 		bottomPanel.add(restartButton);
 
@@ -77,7 +76,7 @@ public class TicTacToe extends ProjectGame {
 		this.add(infoPanel, BorderLayout.NORTH);
 		this.add(center, BorderLayout.CENTER);
 		this.add(bottomPanel, BorderLayout.SOUTH);
-		
+
 		remainingPlays = 9;
 
 		return this;
@@ -95,6 +94,7 @@ public class TicTacToe extends ProjectGame {
 
 	/**
 	 * Check if the line specified has a winner
+	 * 
 	 * @param line - line index to be checked
 	 * @return - true if there is a winner at specified line
 	 */
@@ -112,6 +112,7 @@ public class TicTacToe extends ProjectGame {
 
 	/**
 	 * Check if a column specified has a winner
+	 * 
 	 * @param column - column index to be checked
 	 * @return - true if there is a winner at column
 	 */
@@ -126,9 +127,10 @@ public class TicTacToe extends ProjectGame {
 		this.winner = gameButtons[0][column].getPlayerIndex();
 		return true;
 	}
-	
+
 	/**
 	 * Check if main diagonal has a winner
+	 * 
 	 * @return - true if there is a winner at main diagonal
 	 */
 	private boolean checkMainDiagonal() {
@@ -141,17 +143,18 @@ public class TicTacToe extends ProjectGame {
 		}
 		return true;
 	}
-	
+
 	/**
 	 * Check if second diagonal has a winner
+	 * 
 	 * @return - true if there is a winner at second diagonal
 	 */
 	private boolean checkSecondDiagonal() {
 		for (int i = 0; i < 2; i++) {
 			PlayersIndex leftCheck = gameButtons[2 - i][i].getPlayerIndex();
 			PlayersIndex rightCheck = gameButtons[1 - i][i + 1].getPlayerIndex();
-			
-			if (leftCheck == PlayersIndex.NONE || leftCheck != rightCheck ) {
+
+			if (leftCheck == PlayersIndex.NONE || leftCheck != rightCheck) {
 				return false;
 			}
 		}
@@ -160,16 +163,17 @@ public class TicTacToe extends ProjectGame {
 
 	/**
 	 * Check if there is a winner at diagonals
+	 * 
 	 * @return - true if any diagonal has a winner
 	 */
 	private boolean checkDiagonals() {
 
-		if(checkMainDiagonal()) {
+		if (checkMainDiagonal()) {
 			winner = gameButtons[0][0].getPlayerIndex();
 			return true;
 		}
-		
-		if(checkSecondDiagonal()) {
+
+		if (checkSecondDiagonal()) {
 			winner = gameButtons[2][0].getPlayerIndex();
 			return true;
 		}
@@ -178,8 +182,10 @@ public class TicTacToe extends ProjectGame {
 	}
 
 	/**
-	 * Check if a location is at a diagonal, a diagonal is checked by two conditions:
-	 * x == y, so that's the main diagonal and x + y == 2(max index of each row) for the second diagonal
+	 * Check if a location is at a diagonal, a diagonal is checked by two
+	 * conditions: x == y, so that's the main diagonal and x + y == 2(max index of
+	 * each row) for the second diagonal
+	 * 
 	 * @param location - point to be checked
 	 * @return - true if x == y or x + y == 2
 	 */
@@ -189,24 +195,26 @@ public class TicTacToe extends ProjectGame {
 		}
 		return false;
 	}
-	
+
 	/**
 	 * Check if the last position played make someone a winner
+	 * 
 	 * @param location - location of last play
 	 * @return - true if someone is a winner, false otherwise
 	 */
 	private boolean checkWinner(Point location) {
 		boolean hasWinner = checkLine(location.x);
 		hasWinner = hasWinner || checkColumn(location.y);
-		
+
 		if (isAtDiagonal(location)) {
 			hasWinner = hasWinner || checkDiagonals();
 		}
 		return hasWinner;
 	}
-	
+
 	/**
 	 * Just check if there is any available play
+	 * 
 	 * @return - true if number of plays == 0, false otherwise
 	 */
 	private boolean checkDraw() {
@@ -227,7 +235,7 @@ public class TicTacToe extends ProjectGame {
 				col.setEnabled(true);
 			}
 		}
-		
+
 		remainingPlays = 9;
 		winner = PlayersIndex.NONE;
 	};
@@ -236,18 +244,18 @@ public class TicTacToe extends ProjectGame {
 	 * Set a finish state with every button disabled and restart enabled
 	 */
 	private void finishGame() {
-		
-		for(GameButton[] line : gameButtons) {
-			for(GameButton col : line) {
+
+		for (GameButton[] line : gameButtons) {
+			for (GameButton col : line) {
 				col.setEnabled(false);
 			}
 		}
-		
+
 		winLabel.setText("Vencedor: " + winner.toString());
 		infoPanel.add(winLabel);
 		restartButton.setEnabled(true);
 	}
-	
+
 	/**
 	 * Update the current player
 	 */
@@ -257,27 +265,27 @@ public class TicTacToe extends ProjectGame {
 		} else {
 			currentPlayer = PlayersIndex.PLAYER;
 		}
-		
+
 		this.player.setText(currentPlayer.toString());
 	}
-	
+
 	/**
 	 * Update stats of the game like wins, loses, draws
 	 */
 	private void updateStats() {
 		ProjectGameStats stats = this.getGameStats();
-		
-		if(winner == PlayersIndex.PLAYER) {
+
+		if (winner == PlayersIndex.PLAYER) {
 			stats.increaseWins();
-		} else if(winner == PlayersIndex.ADVERSARY) {
+		} else if (winner == PlayersIndex.ADVERSARY) {
 			stats.increaseLoses();
 		} else {
 			stats.increaseDraws();
 		}
-		
+
 		stats.increasePlayCount();
 		status.setText("Jogador " + stats.getWins() + " : " + stats.getLoses() + " Adversario");
-		
+
 	}
 
 	/**
@@ -290,13 +298,13 @@ public class TicTacToe extends ProjectGame {
 		if (b.getPlayerIndex() != PlayersIndex.NONE) {
 			return;
 		}
-		
+
 		b.setEnabled(false);
 		remainingPlays--;
-		
-		b.setPlayerIndex(currentPlayer);
 
+		b.setPlayerIndex(currentPlayer);
 		b.setText(currentPlayer.getLetter());
+
 		updatePlayer();
 
 		boolean hasWinner = checkWinner(location);
@@ -322,5 +330,7 @@ public class TicTacToe extends ProjectGame {
 	}
 
 	@Override
-	public String getGameName() { return "Tic Tac Toe"; }
+	public String getGameName() {
+		return "Tic Tac Toe";
+	}
 }
