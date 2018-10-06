@@ -1,5 +1,10 @@
 package main;
 
+/**
+ * enum for none, player or adversary to be used in the game comparisions and informations
+ * @author lucas
+ *
+ */
 public enum PlayersIndex {
 	NONE("","Nenhum"), PLAYER("X", "Jogador"), ADVERSARY("O", "Adversario");
 	

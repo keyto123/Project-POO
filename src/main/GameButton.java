@@ -4,6 +4,11 @@ import java.awt.Point;
 
 import javax.swing.JButton;
 
+/**
+ * Main game button holding the index or row and column as a point
+ * @author lucas
+ *
+ */
 public class GameButton extends JButton {
 	private static final long serialVersionUID = 1L;
 	

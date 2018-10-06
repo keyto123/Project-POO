@@ -93,6 +93,11 @@ public class TicTacToe extends ProjectGame {
 		return this.getGameStats();
 	}
 
+	/**
+	 * Check if the line specified has a winner
+	 * @param line - line index to be checked
+	 * @return - true if there is a winner at specified line
+	 */
 	private boolean checkLine(int line) {
 		for (int i = 0; i < 2; i++) {
 			PlayersIndex leftCheck = gameButtons[line][i].getPlayerIndex();
@@ -105,6 +110,11 @@ public class TicTacToe extends ProjectGame {
 		return true;
 	}
 
+	/**
+	 * Check if a column specified has a winner
+	 * @param column - column index to be checked
+	 * @return - true if there is a winner at column
+	 */
 	private boolean checkColumn(int column) {
 		for (int i = 0; i < 2; i++) {
 			PlayersIndex upCheck = gameButtons[i][column].getPlayerIndex();
@@ -117,6 +127,10 @@ public class TicTacToe extends ProjectGame {
 		return true;
 	}
 	
+	/**
+	 * Check if main diagonal has a winner
+	 * @return - true if there is a winner at main diagonal
+	 */
 	private boolean checkMainDiagonal() {
 		for (int i = 0; i < 2; i++) {
 			PlayersIndex leftCheck = gameButtons[i][i].getPlayerIndex();
@@ -128,6 +142,10 @@ public class TicTacToe extends ProjectGame {
 		return true;
 	}
 	
+	/**
+	 * Check if second diagonal has a winner
+	 * @return - true if there is a winner at second diagonal
+	 */
 	private boolean checkSecondDiagonal() {
 		for (int i = 0; i < 2; i++) {
 			PlayersIndex leftCheck = gameButtons[2 - i][i].getPlayerIndex();
@@ -140,6 +158,10 @@ public class TicTacToe extends ProjectGame {
 		return true;
 	}
 
+	/**
+	 * Check if there is a winner at diagonals
+	 * @return - true if any diagonal has a winner
+	 */
 	private boolean checkDiagonals() {
 
 		if(checkMainDiagonal()) {
@@ -155,6 +177,12 @@ public class TicTacToe extends ProjectGame {
 		return false;
 	}
 
+	/**
+	 * Check if a location is at a diagonal, a diagonal is checked by two conditions:
+	 * x == y, so that's the main diagonal and x + y == 2(max index of each row) for the second diagonal
+	 * @param location - point to be checked
+	 * @return - true if x == y or x + y == 2
+	 */
 	private boolean isAtDiagonal(Point location) {
 		if ((location.x == location.y) || (location.x + location.y == 2)) {
 			return true;
@@ -162,6 +190,11 @@ public class TicTacToe extends ProjectGame {
 		return false;
 	}
 	
+	/**
+	 * Check if the last position played make someone a winner
+	 * @param location - location of last play
+	 * @return - true if someone is a winner, false otherwise
+	 */
 	private boolean checkWinner(Point location) {
 		boolean hasWinner = checkLine(location.x);
 		hasWinner = hasWinner || checkColumn(location.y);
@@ -172,10 +205,17 @@ public class TicTacToe extends ProjectGame {
 		return hasWinner;
 	}
 	
+	/**
+	 * Just check if there is any available play
+	 * @return - true if number of plays == 0, false otherwise
+	 */
 	private boolean checkDraw() {
 		return remainingPlays == 0;
 	}
 
+	/**
+	 * restart button listener
+	 */
 	private ActionListener restartListener = e -> {
 		infoPanel.remove(winLabel);
 		restartButton.setEnabled(false);
@@ -192,6 +232,9 @@ public class TicTacToe extends ProjectGame {
 		winner = PlayersIndex.NONE;
 	};
 
+	/**
+	 * Set a finish state with every button disabled and restart enabled
+	 */
 	private void finishGame() {
 		
 		for(GameButton[] line : gameButtons) {
@@ -205,6 +248,9 @@ public class TicTacToe extends ProjectGame {
 		restartButton.setEnabled(true);
 	}
 	
+	/**
+	 * Update the current player
+	 */
 	private void updatePlayer() {
 		if (currentPlayer == PlayersIndex.PLAYER) {
 			currentPlayer = PlayersIndex.ADVERSARY;
@@ -215,6 +261,9 @@ public class TicTacToe extends ProjectGame {
 		this.player.setText(currentPlayer.toString());
 	}
 	
+	/**
+	 * Update stats of the game like wins, loses, draws
+	 */
 	private void updateStats() {
 		ProjectGameStats stats = this.getGameStats();
 		
@@ -231,6 +280,9 @@ public class TicTacToe extends ProjectGame {
 		
 	}
 
+	/**
+	 * main listener for playable buttons
+	 */
 	private ActionListener gameButtonListener = e -> {
 		GameButton b = (GameButton) e.getSource();
 		Point location = b.getGamePosition();
@@ -255,6 +307,9 @@ public class TicTacToe extends ProjectGame {
 		}
 	};
 
+	/**
+	 * initialize the set of playable buttons and restart button
+	 */
 	private void initButtons() {
 		for (int i = 0; i < gameButtons.length; i++) {
 			for (int j = 0; j < gameButtons[i].length; j++) {
