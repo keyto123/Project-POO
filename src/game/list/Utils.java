@@ -170,7 +170,6 @@ public class Utils {
 		base_path = base_path.substring(0, base_path.length() - dif);
 		
 		String path = base_path + File.separator + "games";
-		System.out.println("path: " + path);
 
 		File gamesDir = new File(path);
 
