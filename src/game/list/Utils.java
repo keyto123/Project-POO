@@ -165,11 +165,12 @@ public class Utils {
 	 * @return String - games folder path
 	 */
 	private static void initGameFolderPath() throws URISyntaxException {
-
-		URL tmp = Utils.class.getResource("/");
-		URI tmp2 = tmp.toURI();
-
-		String path = tmp2.getPath() + "games";
+		String base_path = new File(Utils.class.getProtectionDomain().getCodeSource().getLocation().toURI()).getPath();
+		int dif = base_path.length() - base_path.lastIndexOf(File.separator);
+		base_path = base_path.substring(0, base_path.length() - dif);
+		
+		String path = base_path + File.separator + "games";
+		System.out.println("path: " + path);
 
 		File gamesDir = new File(path);
 
